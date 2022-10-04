@@ -1061,6 +1061,7 @@
 #include "RE/M/MultiBoundMarkerData.h"
 #include "RE/N/NativeFunction.h"
 #include "RE/N/NativeFunctionBase.h"
+#include "RE/N/NativeLatentFunction.h"
 #include "RE/N/NavMesh.h"
 #include "RE/N/NavMeshInfoMap.h"
 #include "RE/N/NiAVObject.h"

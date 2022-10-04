@@ -11,6 +11,8 @@ namespace RE
 
 	namespace BSScript
 	{
+		struct LatentPromiseBase;
+
 		template <class>
 		struct _is_reference_wrapper :
 			std::false_type
@@ -204,6 +206,18 @@ namespace RE
 		inline constexpr bool is_valid_return_v = is_valid_return<T>::value;
 
 		template <class T>
+		struct is_valid_latent_return :
+			std::conjunction<
+				std::is_base_of<
+					LatentPromiseBase,
+					typename std::coroutine_traits<T>::promise_type>,
+				is_valid_return<typename T::result_type>>
+		{};
+
+		template <class T>
+		inline constexpr bool is_valid_latent_return_v = is_valid_latent_return<T>::value;
+
+		template <class T>
 		struct is_return_convertible :
 			std::conjunction<
 				is_not_const<T>,
@@ -234,5 +248,17 @@ namespace RE
 
 		template <class Int, class R, class Cls, class... Args>
 		inline constexpr bool is_valid_long_sig_v = is_valid_long_sig<Int, R, Cls, Args...>::value;
+
+		template <class Int, class R, class Cls, class... Args>
+		struct is_valid_latent_sig :
+			std::conjunction<
+				is_integral<Int>,
+				is_valid_latent_return<R>,
+				is_valid_base<Cls>,
+				is_parameter_convertible<Args>...>
+		{};
+
+		template <class Int, class R, class Cls, class... Args>
+		inline constexpr bool is_valid_latent_sig_v = is_valid_latent_sig<Int, R, Cls, Args...>::value;
 	}
 }

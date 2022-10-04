@@ -5,7 +5,9 @@
 #include "RE/B/BSTEvent.h"
 #include "RE/B/BSTSmartPointer.h"
 #include "RE/E/ErrorLogger.h"
+#include "RE/I/IStackCallbackFunctor.h"
 #include "RE/T/TypeInfo.h"
+#include "RE/V/Variable.h"
 
 namespace RE
 {
@@ -24,7 +26,6 @@ namespace RE
 		class IFunction;
 		class IFunctionArguments;
 		class ISavePatcherInterface;
-		class IStackCallbackFunctor;
 		class ITypeLinkedCallback;
 		class Object;
 		class ObjectBindPolicy;
@@ -40,6 +41,26 @@ namespace RE
 			inline static constexpr auto RTTI = RTTI_BSScript__IVirtualMachine;
 
 			using Severity = BSScript::ErrorLogger::Severity;
+			struct Awaitable
+			{
+				struct CallbackFunctor : public IStackCallbackFunctor
+				{
+					void operator()(Variable a_result) override;
+					void SetObject(const BSTSmartPointer<Object>&) override {}
+
+					bool                    pending{ false };
+					Variable                result;
+					std::coroutine_handle<> continuation;
+				};
+
+				Awaitable();
+				void     SetPending(bool a_pending = true);
+				bool     await_ready() const;
+				void     await_suspend(std::coroutine_handle<> a_handle);
+				Variable await_resume() const;
+
+				BSTSmartPointer<IStackCallbackFunctor> callback;
+			};
 
 			virtual ~IVirtualMachine();  // 00
 
@@ -103,7 +124,10 @@ namespace RE
 			bool                       CreateObject(const BSFixedString& a_className, void* a_property, BSTSmartPointer<Object>& a_objPtr);
 			bool                       CreateObject(const BSFixedString& a_className, BSTSmartPointer<Object>& a_result);
 			bool                       DispatchMethodCall(BSTSmartPointer<Object>& a_obj, const BSFixedString& a_fnName, IFunctionArguments* a_args, BSTSmartPointer<IStackCallbackFunctor>& a_result);
+			Awaitable                  DispatchMethodCall(BSTSmartPointer<Object>& a_obj, const BSFixedString& a_fnName, IFunctionArguments* a_args);
 			bool                       DispatchMethodCall(VMHandle a_handle, const BSFixedString& a_className, const BSFixedString& a_fnName, IFunctionArguments* a_args, BSTSmartPointer<IStackCallbackFunctor>& a_result);
+			Awaitable                  DispatchMethodCall(VMHandle a_handle, const BSFixedString& a_className, const BSFixedString& a_fnName, IFunctionArguments* a_args);
+			Awaitable                  DispatchStaticCall(const BSFixedString& a_className, const BSFixedString& a_fnName, IFunctionArguments* a_args);
 			ObjectBindPolicy*          GetObjectBindPolicy();
 			const ObjectBindPolicy*    GetObjectBindPolicy() const;
 			IObjectHandlePolicy*       GetObjectHandlePolicy();
