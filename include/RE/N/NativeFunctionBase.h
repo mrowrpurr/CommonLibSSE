@@ -57,7 +57,7 @@ namespace RE
 
 				const bool GetIsLatent() const;
 
-			protected:
+				// protected:
 				// members
 				BSFixedString        _name;                            // 10
 				BSFixedString        _objName;                         // 18

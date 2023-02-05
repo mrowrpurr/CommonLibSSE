@@ -178,5 +178,17 @@ namespace RE
 				SetCallableFromTasklets(a_className.data(), a_fnName.data(), a_callableFromTasklets);
 			}
 		}
+
+		template <class R, class F>
+		void IVirtualMachine::RegisterLatentFunction(std::string_view a_fnName, std::string_view a_className, F a_callback, bool a_callableFromTasklets)
+		{
+			auto* nativeFunction = new RE::NativeFunction(a_fnName, a_className, a_callback);
+			nativeFunction->_isLatent = true;
+			nativeFunction->_retType = GetRawType<R>();
+			BindNativeMethod(nativeFunction);
+			if (a_callableFromTasklets) {
+				SetCallableFromTasklets(a_className.data(), a_fnName.data(), a_callableFromTasklets);
+			}
+		}
 	}
 }
