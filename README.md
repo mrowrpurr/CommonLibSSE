@@ -9,6 +9,8 @@
 
 The library was created by Ryan McKenzie ([GitHub](https://github.com/Ryan-rsm-McKenzie), [Nexus](https://www.nexusmods.com/skyrimspecialedition/users/5687342)) in [2018](https://github.com/Ryan-rsm-McKenzie/CommonLibSSE/commit/224773c424bdb8e36c761810cdff0fcfefda5f4a).
 
+> _For my fork, here, each popular fork has its own branch_
+
 # Forks
 
 Today, there are a few important forks of `CommonLibSSE`:
