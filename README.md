@@ -1,9 +1,9 @@
-# Skyrim CommonLibSSE Library (_fork_)
-
 > Want to get started with SKSE development?
 >
 > **Documentation:** https://skyrim.dev/skse  
 > **YouTube Tutorials:** https://youtube.com/SkyrimScripting
+
+# Skyrim CommonLibSSE Library (_fork_)
 
 `CommonLibSSE` is a reverse engineered library for Skyrim Special Edition.
 
